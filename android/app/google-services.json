@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "920543527292",
+    "project_id": "pulse-talk-7a5b2",
+    "storage_bucket": "pulse-talk-7a5b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920543527292:android:a35ad95e8f6e044941e4f9",
+        "android_client_info": {
+          "package_name": "com.example.pulse_talk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPxoXetqRMsH6ZqeBVyhJJWQkKYLST520"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

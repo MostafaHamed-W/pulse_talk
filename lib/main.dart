@@ -1,6 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pulse_talk/firebase_options.dart';
+import 'package:pulse_talk/screens/auth.dart';
+import 'package:pulse_talk/screens/login.dart';
+import 'package:pulse_talk/screens/signin_flutter_blricks_test.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const App());
 }
 
@@ -14,7 +23,7 @@ class App extends StatelessWidget {
       theme: ThemeData().copyWith(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 63, 17, 177)),
       ),
-      home: Scaffold(),
+      home: const LoginScreen(),
     );
   }
 }
