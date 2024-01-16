@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pulse_talk/screens/login.dart';
+import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
 import 'package:pulse_talk/utils/app_colors.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -21,13 +22,10 @@ class ChatScreen extends StatelessWidget {
         }
       } on FirebaseAuthException catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                e.message ?? 'Failed to signout, Please try again!',
-              ),
-            ),
-          );
+          showCustomSnackbar(
+              context: context,
+              message: e.message,
+              spareError: 'Failed to signout, Please try again!');
         }
       }
     }

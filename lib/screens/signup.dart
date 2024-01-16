@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
 import 'package:pulse_talk/utils/app_colors.dart';
 import 'package:pulse_talk/utils/app_styles.dart';
 import 'package:pulse_talk/screens/login.dart';
@@ -34,10 +35,9 @@ class _LoginScreenState extends State<SignupScreen> {
           _isLoading = false;
         });
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Account created succefully, please login now'),
-            ),
+          showCustomSnackbar(
+            context: context,
+            message: 'Account created succefully, please login now',
           );
           Navigator.pushReplacement(
             context,
@@ -48,13 +48,10 @@ class _LoginScreenState extends State<SignupScreen> {
         }
       } on FirebaseAuthException catch (error) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                error.message ?? "Unknown Auth Exception",
-              ),
-            ),
+          showCustomSnackbar(
+            context: context,
+            message: error.message,
+            spareError: "Unknown Auth Exception",
           );
         }
         setState(() {

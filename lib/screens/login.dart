@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pulse_talk/screens/chat.dart';
+import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
 import 'package:pulse_talk/utils/app_colors.dart';
 import 'package:pulse_talk/screens/signup.dart';
 import 'package:pulse_talk/utils/app_styles.dart';
@@ -23,14 +25,17 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-        print('logged in');
-      } on FirebaseAuthException catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(e.message ?? 'Unknown error, Please try again later'),
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ChatScreen(),
             ),
           );
+        }
+      } on FirebaseAuthException catch (e) {
+        if (context.mounted) {
+          showCustomSnackbar(context: context, message: e.message);
         }
       }
     } else {}
