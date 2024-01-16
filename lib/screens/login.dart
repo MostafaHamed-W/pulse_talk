@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pulse_talk/utils/app_colors.dart';
+import 'package:pulse_talk/screens/signup.dart';
+import 'package:pulse_talk/utils/app_styles.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,18 +13,33 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  var _email = '';
-  var _password = '';
-  void _onSubmit() {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  void _onSubmit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      print(_email);
-      print(_password);
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        print('logged in');
+      } on FirebaseAuthException catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.message ?? 'Unknown error, Please try again later'),
+            ),
+          );
+        }
+      }
     } else {}
   }
 
   @override
   void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -28,8 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pulse Talk'),
-      ),
+          // title: const Text('Pulse Talk'),
+          ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Card(
               margin: const EdgeInsets.all(20),
-              color: Colors.grey.shade300,
+              color: Colors.transparent,
+              elevation: 0.0,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: SingleChildScrollView(
@@ -57,6 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                           children: [
                             TextFormField(
+                              controller: _emailController,
                               validator: (value) {
                                 if (value == null || !value.contains('@')) {
                                   return 'Please enter a valid email';
@@ -64,43 +85,42 @@ class _LoginScreenState extends State<LoginScreen> {
                                   return null;
                                 }
                               },
-                              onSaved: (newValue) {
-                                _email = newValue!;
-                              },
                               onTapOutside: (event) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                               },
                               decoration: const InputDecoration(
                                 labelText: 'Email Address',
+                                border: AppStyle.outlineInputBorder,
                               ),
                               keyboardType: TextInputType.emailAddress,
                               textCapitalization: TextCapitalization.none,
                               autocorrect: false,
                             ),
+                            const SizedBox(height: 20),
                             TextFormField(
+                              controller: _passwordController,
                               validator: (value) {
-                                if (value == null || value.trim().length <= 6) {
-                                  return 'Password must be at least 7 characters';
+                                if (value == null || value.trim().length < 6) {
+                                  return 'Please enter valid password';
                                 } else {
                                   return null;
                                 }
                               },
-                              onSaved: (newValue) {
-                                _password = newValue!;
-                              },
                               onTapOutside: (event) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                               },
+                              obscureText: true,
                               decoration: const InputDecoration(
-                                // border: OutlineInputBorder(),
                                 label: Text('Password'),
+                                border: AppStyle.outlineInputBorder,
                               ),
                             ),
-                            const SizedBox(height: 30),
+                            const SizedBox(height: 20),
                             ElevatedButton(
                               onPressed: _onSubmit,
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xfffab714)),
+                                backgroundColor: AppColor.kPrimary,
+                              ),
                               child: const SizedBox(
                                 width: double.infinity,
                                 child: Text(
@@ -111,18 +131,27 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            RichText(
-                              text: const TextSpan(
-                                text: "Don't have email?",
-                                style: TextStyle(color: Colors.black),
-                                children: [
-                                  TextSpan(
-                                    text: " create new one",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                            InkWell(
+                              onTap: () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SignupScreen(),
+                                ),
+                              ),
+                              child: RichText(
+                                text: const TextSpan(
+                                  text: "Don't have email?",
+                                  style: TextStyle(color: Colors.black),
+                                  children: [
+                                    TextSpan(
+                                      text: " create new one",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],

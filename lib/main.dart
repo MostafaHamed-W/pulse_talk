@@ -1,9 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pulse_talk/firebase_options.dart';
-import 'package:pulse_talk/screens/auth.dart';
 import 'package:pulse_talk/screens/login.dart';
-import 'package:pulse_talk/screens/signin_flutter_blricks_test.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
