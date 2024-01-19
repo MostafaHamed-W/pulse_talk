@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pulse_talk/screens/chat.dart';
 import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
+import 'package:pulse_talk/screens/widgets/user_image_picker.dart';
 import 'package:pulse_talk/utils/app_colors.dart';
 import 'package:pulse_talk/screens/signup.dart';
 import 'package:pulse_talk/utils/app_styles.dart';
@@ -21,19 +22,21 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
-        if (context.mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ChatScreen(),
-            ),
-          );
-        }
+        // print(userCredential);
+        // if (context.mounted) {
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const ChatScreen(),
+        //     ),
+        //   );
+        // }
       } on FirebaseAuthException catch (e) {
+        print('exception');
         if (context.mounted) {
           showCustomSnackbar(context: context, message: e.message);
         }
@@ -68,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Image.asset('assets/images/logo.png'),
             ),
             Card(
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               color: Colors.transparent,
               elevation: 0.0,
               child: Padding(

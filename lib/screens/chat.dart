@@ -1,11 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:pulse_talk/screens/login.dart';
 import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
 import 'package:pulse_talk/utils/app_colors.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  String? userImageUrl;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +50,13 @@ class ChatScreen extends StatelessWidget {
           IconButton(
             onPressed: signOut,
             icon: const Icon(
-              Icons.login,
+              Icons.exit_to_app,
             ),
           )
         ],
+      ),
+      body: Column(
+        children: [],
       ),
     );
   }

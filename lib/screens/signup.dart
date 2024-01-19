@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
+import 'package:pulse_talk/screens/widgets/user_image_picker.dart';
 import 'package:pulse_talk/utils/app_colors.dart';
 import 'package:pulse_talk/utils/app_styles.dart';
 import 'package:pulse_talk/screens/login.dart';
@@ -18,47 +22,62 @@ class _LoginScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
+  File? userImage;
 
   void _onSubmit() async {
     setState(() {
       _isLoading = true;
     });
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    final isValid = _formKey.currentState!.validate();
 
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailcontroller.text,
-          password: _passwordController.text,
-        );
-        setState(() {
-          _isLoading = false;
-        });
-        if (context.mounted) {
-          showCustomSnackbar(
-            context: context,
-            message: 'Account created succefully, please login now',
-          );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LoginScreen(),
-            ),
-          );
-        }
-      } on FirebaseAuthException catch (error) {
-        if (context.mounted) {
-          showCustomSnackbar(
-            context: context,
-            message: error.message,
-            spareError: "Unknown Auth Exception",
-          );
-        }
-        setState(() {
-          _isLoading = false;
-        });
+    if (!isValid || userImage == null) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (userImage == null) {
+        showCustomSnackbar(context: context, message: 'Please chose an image!');
       }
-    } else {
+      return;
+    }
+    _formKey.currentState!.save();
+
+    try {
+      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailcontroller.text,
+        password: _passwordController.text,
+      );
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('user_images')
+          .child('${userCredential.user!.uid}.jpg');
+
+      await storageRef.putFile(userImage!);
+      final imageUrl = storageRef.getDownloadURL();
+      print(imageUrl);
+
+      setState(() {
+        _isLoading = false;
+      });
+      if (context.mounted) {
+        showCustomSnackbar(
+          context: context,
+          message: 'Account created succefully, please login now',
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
+      }
+    } on FirebaseAuthException catch (error) {
+      if (context.mounted) {
+        showCustomSnackbar(
+          context: context,
+          message: error.message,
+          spareError: "Unknown Auth Exception",
+        );
+      }
       setState(() {
         _isLoading = false;
       });
@@ -86,8 +105,14 @@ class _LoginScreenState extends State<SignupScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 30),
+                  UserImagePicker(
+                    onSelectImage: (pickedImage) {
+                      userImage = pickedImage;
+                    },
+                  ),
                   Card(
-                    margin: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                     color: Colors.transparent,
                     elevation: 0.0,
                     child: Padding(
