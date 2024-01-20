@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
@@ -52,8 +53,15 @@ class _LoginScreenState extends State<SignupScreen> {
           .child('${userCredential.user!.uid}.jpg');
 
       await storageRef.putFile(userImage!);
-      final imageUrl = storageRef.getDownloadURL();
-      print(imageUrl);
+      final imageUrl = await storageRef.getDownloadURL();
+
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set(
+        {
+          'name ': _nameController.text,
+          'email': _emailcontroller.text,
+          'image_url': imageUrl,
+        },
+      );
 
       setState(() {
         _isLoading = false;
