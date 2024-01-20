@@ -18,6 +18,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<SignupScreen> {
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -57,7 +58,8 @@ class _LoginScreenState extends State<SignupScreen> {
 
       await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set(
         {
-          'name ': _nameController.text,
+          'username': _usernameController.text,
+          'name': _nameController.text,
           'email': _emailcontroller.text,
           'image_url': imageUrl,
         },
@@ -134,6 +136,27 @@ class _LoginScreenState extends State<SignupScreen> {
                               child: Column(
                                 children: [
                                   TextFormField(
+                                    controller: _usernameController,
+                                    validator: (value) {
+                                      if (value == null || value.trim().length < 3) {
+                                        return 'Please enter a valid username';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    enableSuggestions: false,
+                                    onTapOutside: (event) {
+                                      FocusManager.instance.primaryFocus?.unfocus();
+                                    },
+                                    decoration: const InputDecoration(
+                                      labelText: 'Username',
+                                      border: AppStyle.outlineInputBorder,
+                                    ),
+                                    textCapitalization: TextCapitalization.none,
+                                    autocorrect: false,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  TextFormField(
                                     controller: _nameController,
                                     validator: (value) {
                                       if (value == null || value.trim().length < 4) {
@@ -142,6 +165,7 @@ class _LoginScreenState extends State<SignupScreen> {
                                         return null;
                                       }
                                     },
+                                    enableSuggestions: false,
                                     onTapOutside: (event) {
                                       FocusManager.instance.primaryFocus?.unfocus();
                                     },

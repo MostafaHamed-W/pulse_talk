@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:pulse_talk/screens/chat_messages.dart';
 import 'package:pulse_talk/screens/login.dart';
+import 'package:pulse_talk/screens/widgets/new_message.dart';
 import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
 import 'package:pulse_talk/utils/app_colors.dart';
 
@@ -55,8 +57,15 @@ class _ChatScreenState extends State<ChatScreen> {
           )
         ],
       ),
-      body: Column(
-        children: [],
+      body: const SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ChatMessages(),
+            ),
+            NewMessage(),
+          ],
+        ),
       ),
     );
   }
