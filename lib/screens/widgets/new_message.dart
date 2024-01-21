@@ -24,9 +24,10 @@ class _NewMessageState extends State<NewMessage> {
         await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).get();
 
     _messageController.clear();
-    if (context.mounted) {
-      FocusScope.of(context).unfocus();
-    }
+    // hide keyboard after send a message
+    // if (context.mounted) {
+    //   FocusScope.of(context).unfocus();
+    // }
     // send message to firebase
     try {
       FirebaseFirestore.instance.collection('chat').add({
@@ -38,7 +39,7 @@ class _NewMessageState extends State<NewMessage> {
         'userImage': userData.data()!['image_url']
       });
     } catch (e) {
-      print(e);
+      // print(e);
     }
   }
 

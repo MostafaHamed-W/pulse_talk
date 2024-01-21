@@ -18,7 +18,7 @@ class ChatMessages extends StatelessWidget {
           .snapshots(),
       builder: (context, chatSnapshots) {
         if (chatSnapshots.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
         if (!chatSnapshots.hasData || chatSnapshots.data!.docs.isEmpty) {
           return const Text('No messages yet');

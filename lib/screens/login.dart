@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pulse_talk/screens/chat.dart';
 import 'package:pulse_talk/screens/widgets/scaffold_messanger.dart';
-import 'package:pulse_talk/screens/widgets/user_image_picker.dart';
 import 'package:pulse_talk/utils/app_colors.dart';
 import 'package:pulse_talk/screens/signup.dart';
 import 'package:pulse_talk/utils/app_styles.dart';
@@ -22,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       try {
+        // ignore: unused_local_variable
         UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
@@ -36,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
         //   );
         // }
       } on FirebaseAuthException catch (e) {
-        print('exception');
+        // print('exception');
         if (context.mounted) {
           showCustomSnackbar(context: context, message: e.message);
         }
